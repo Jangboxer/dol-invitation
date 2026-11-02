@@ -158,7 +158,7 @@
   <button type="button" class="close" aria-label="닫기">✕</button>
   <span class="num"></span>
 </div>
-<script>window.INVITE = {"info":{"사진폴더":"예은사진","공유사진":{"파일":"21.jpg","자르기":[0.075,0.033,0.85]},"아이":{"이름":"예은","생일":"2025-11-27"},"부모":{"아빠":"장진석","엄마":"김다홍"},"돌잔치":{"날짜":"2026-11-14","시간":"18:30","장소":"이룸채 2층 금결","표지장소":"이룸채 한옥 돌잔치 금결","주소":"대구광역시 수성구 지산동 1138-1","지도이름":"이룸채","위도":35.828538,"경도":128.628234},"모시는글":["저희 예은이가 어느덧 첫 번째 생일을 맞이했습니다.","","소중한 분들과 함께 기쁨을 나누고자","자리를 마련하였으니 부디 오셔서","축복해 주시면 감사하겠습니다."],"교통":{"자가용":"","대중교통":""},"공유주소":"https://jangboxer.github.io/dol-invitation/"},"photos":{"main":"img/main.jpg","gallery":[{"t":"img/g01_t.jpg","f":"img/g01.jpg"},{"t":"img/g02_t.jpg","f":"img/g02.jpg"},{"t":"img/g03_t.jpg","f":"img/g03.jpg"},{"t":"img/g04_t.jpg","f":"img/g04.jpg"},{"t":"img/g05_t.jpg","f":"img/g05.jpg"},{"t":"img/g06_t.jpg","f":"img/g06.jpg"},{"t":"img/g07_t.jpg","f":"img/g07.jpg"},{"t":"img/g08_t.jpg","f":"img/g08.jpg"},{"t":"img/g09_t.jpg","f":"img/g09.jpg"},{"t":"img/g10_t.jpg","f":"img/g10.jpg"},{"t":"img/g11_t.jpg","f":"img/g11.jpg"},{"t":"img/g12_t.jpg","f":"img/g12.jpg"},{"t":"img/g13_t.jpg","f":"img/g13.jpg"},{"t":"img/g14_t.jpg","f":"img/g14.jpg"},{"t":"img/g15_t.jpg","f":"img/g15.jpg"},{"t":"img/g16_t.jpg","f":"img/g16.jpg"},{"t":"img/g17_t.jpg","f":"img/g17.jpg"},{"t":"img/g18_t.jpg","f":"img/g18.jpg"},{"t":"img/g19_t.jpg","f":"img/g19.jpg"}]}};</script>
+<script>window.INVITE = {"info":{"사진폴더":"예은사진","달력":false,"공유사진":{"파일":"21.jpg","자르기":[0.075,0.033,0.85]},"아이":{"이름":"예은","생일":"2025-11-27"},"부모":{"아빠":"장진석","엄마":"김다홍"},"돌잔치":{"날짜":"2026-11-14","시간":"18:30","장소":"이룸채 2층 금결","표지장소":"장소 : 이룸채 한옥 돌잔치 금결방","주소":"대구광역시 수성구 지산동 1138-1","지도이름":"이룸채","위도":35.828538,"경도":128.628234},"모시는글":["저희 예은이가 어느덧 첫 번째 생일을 맞이했습니다.","","소중한 분들과 함께 기쁨을 나누고자","자리를 마련하였으니 부디 오셔서","축복해 주시면 감사하겠습니다."],"교통":{"자가용":"","대중교통":""},"공유주소":"https://jangboxer.github.io/dol-invitation/"},"photos":{"main":"img/main.jpg","gallery":[{"t":"img/g01_t.jpg","f":"img/g01.jpg"},{"t":"img/g02_t.jpg","f":"img/g02.jpg"},{"t":"img/g03_t.jpg","f":"img/g03.jpg"},{"t":"img/g04_t.jpg","f":"img/g04.jpg"},{"t":"img/g05_t.jpg","f":"img/g05.jpg"},{"t":"img/g06_t.jpg","f":"img/g06.jpg"},{"t":"img/g07_t.jpg","f":"img/g07.jpg"},{"t":"img/g08_t.jpg","f":"img/g08.jpg"},{"t":"img/g09_t.jpg","f":"img/g09.jpg"},{"t":"img/g10_t.jpg","f":"img/g10.jpg"},{"t":"img/g11_t.jpg","f":"img/g11.jpg"},{"t":"img/g12_t.jpg","f":"img/g12.jpg"},{"t":"img/g13_t.jpg","f":"img/g13.jpg"},{"t":"img/g14_t.jpg","f":"img/g14.jpg"},{"t":"img/g15_t.jpg","f":"img/g15.jpg"},{"t":"img/g16_t.jpg","f":"img/g16.jpg"},{"t":"img/g17_t.jpg","f":"img/g17.jpg"},{"t":"img/g18_t.jpg","f":"img/g18.jpg"},{"t":"img/g19_t.jpg","f":"img/g19.jpg"}]}};</script>
 <script>
 (() => {
   const { info: I, photos: P } = window.INVITE;
@@ -287,14 +287,16 @@
     </div></div>` : ''}
   </section>`;
 
-  $('#app').innerHTML = hero + invite + calendar + gallery + where;
+  // 정보.json "달력": false 면 달력(+남은 시간) 섹션을 뺀다
+  const showCal = I.달력 !== false;
+  $('#app').innerHTML = hero + invite + (showCal ? calendar : '') + gallery + where;
 
   // 스크롤하면 하나씩 나타나기
   const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' }) : null;
   document.querySelectorAll('.rv').forEach((el) => (io ? io.observe(el) : el.classList.add('in')));
 
   // 남은 시간
-  if (party) {
+  if (party && showCal) {
     const at = new Date(party); if (time) at.setHours(time[0], time[1]);
     const box = $('.count');
     const tick = () => {
